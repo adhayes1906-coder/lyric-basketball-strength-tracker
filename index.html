@@ -1,0 +1,1581 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A back-aware basketball strength and conditioning tracker for Lyric Hayes, with 30-minute workouts, optional under-45-minute add-ons, cardio, safety notes, and progress logging.">
+  <title>Lyric Hayes Basketball Strength Tracker</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #16211f;
+      --muted: #60716d;
+      --line: #dce4df;
+      --paper: #fbfcf8;
+      --surface: #ffffff;
+      --teal: #0f766e;
+      --teal-dark: #0b4d49;
+      --amber: #d97706;
+      --coral: #d94f3d;
+      --blue: #2563eb;
+      --green-soft: #e6f4ee;
+      --gold-soft: #fff2cf;
+      --red-soft: #fff0ed;
+      --shadow: 0 14px 40px rgba(24, 36, 32, 0.08);
+      --radius: 8px;
+      --focus: 0 0 0 3px rgba(15, 118, 110, 0.22);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(230, 244, 238, 0.95) 0, rgba(251, 252, 248, 0.98) 310px),
+        var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible {
+      outline: none;
+      box-shadow: var(--focus);
+    }
+
+    .shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(220, 228, 223, 0.88);
+      background: rgba(251, 252, 248, 0.92);
+      backdrop-filter: blur(16px);
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 68px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .mark {
+      display: grid;
+      place-items: center;
+      flex: 0 0 42px;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      color: white;
+      background:
+        radial-gradient(circle at 30% 26%, rgba(255, 255, 255, 0.32), transparent 28%),
+        linear-gradient(135deg, #d94f3d, #d97706);
+      box-shadow: 0 8px 18px rgba(217, 79, 61, 0.22);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(1.05rem, 1.9vw, 1.42rem);
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    .brand span {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 0.83rem;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .icon-button,
+    .text-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--ink);
+      border: 1px solid var(--line);
+      box-shadow: 0 1px 0 rgba(24, 36, 32, 0.04);
+    }
+
+    .icon-button {
+      width: 40px;
+      padding: 0;
+    }
+
+    .text-button {
+      gap: 8px;
+      padding: 0 12px;
+      white-space: nowrap;
+    }
+
+    .primary-button {
+      color: white;
+      background: var(--teal);
+      border-color: var(--teal);
+    }
+
+    .icon {
+      width: 19px;
+      height: 19px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .hero {
+      padding: 28px 0 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .overview {
+      display: grid;
+      align-content: center;
+      gap: 18px;
+      min-height: 280px;
+      padding: clamp(18px, 3vw, 30px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(255, 250, 239, 0.78)),
+        repeating-linear-gradient(90deg, transparent 0 58px, rgba(15, 118, 110, 0.05) 58px 59px);
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      margin: 0;
+      color: var(--teal-dark);
+      font-size: 0.82rem;
+      font-weight: 750;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .overview h2 {
+      max-width: 780px;
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 4.4rem);
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+
+    .overview p {
+      max-width: 720px;
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(0.98rem, 1.3vw, 1.12rem);
+    }
+
+    .metric-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .metric {
+      min-height: 78px;
+      padding: 12px;
+      border: 1px solid rgba(15, 118, 110, 0.16);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.76);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 1.3rem;
+      line-height: 1.05;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .court-panel {
+      position: relative;
+      min-height: 280px;
+      overflow: hidden;
+      border-radius: var(--radius);
+      border: 1px solid rgba(11, 77, 73, 0.22);
+      background:
+        linear-gradient(160deg, rgba(15, 118, 110, 0.92), rgba(12, 69, 65, 0.92)),
+        #0f766e;
+      box-shadow: var(--shadow);
+    }
+
+    .court-panel svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.9;
+    }
+
+    .court-caption {
+      position: absolute;
+      inset-inline: 18px;
+      bottom: 18px;
+      display: grid;
+      gap: 8px;
+      color: white;
+      text-shadow: 0 2px 18px rgba(0, 0, 0, 0.22);
+    }
+
+    .court-caption strong {
+      font-size: 1.12rem;
+    }
+
+    .court-caption span {
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 0.9rem;
+    }
+
+    .safety-band {
+      border-block: 1px solid rgba(217, 79, 61, 0.18);
+      background: var(--red-soft);
+    }
+
+    .safety-inner {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 14px 0;
+      color: #6f241c;
+    }
+
+    .safety-inner p {
+      margin: 0;
+      font-size: 0.92rem;
+    }
+
+    main {
+      padding: 24px 0 44px;
+    }
+
+    .app-grid {
+      display: grid;
+      grid-template-columns: minmax(230px, 280px) minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .side-panel,
+    .workout-panel,
+    .log-panel,
+    .notes-panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: 0 8px 30px rgba(24, 36, 32, 0.05);
+    }
+
+    .side-panel {
+      position: sticky;
+      top: 84px;
+      padding: 14px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .section-title h3 {
+      margin: 0;
+      font-size: 0.98rem;
+      letter-spacing: 0;
+    }
+
+    .small-muted {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .week-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .week-btn,
+    .day-tab,
+    .mode-btn {
+      min-height: 38px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--paper);
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .week-btn[aria-pressed="true"],
+    .day-tab[aria-selected="true"],
+    .mode-btn[aria-pressed="true"] {
+      color: white;
+      border-color: var(--teal);
+      background: var(--teal);
+    }
+
+    .day-tabs {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .day-tab {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 8px;
+      min-height: 48px;
+      padding: 0 10px;
+      text-align: left;
+    }
+
+    .day-tab small {
+      display: block;
+      margin-top: 1px;
+      font-weight: 550;
+      opacity: 0.84;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--amber);
+    }
+
+    .day-tab:nth-child(2) .dot {
+      background: var(--blue);
+    }
+
+    .day-tab:nth-child(3) .dot {
+      background: var(--coral);
+    }
+
+    .mini-progress {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      min-width: 32px;
+      height: 24px;
+      border-radius: 999px;
+      color: currentColor;
+      background: rgba(255, 255, 255, 0.5);
+      font-size: 0.75rem;
+    }
+
+    .rule-list {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .rule-list li {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .rule-list svg {
+      width: 18px;
+      height: 18px;
+      margin-top: 1px;
+      color: var(--teal);
+    }
+
+    .content-stack {
+      display: grid;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .workout-panel {
+      overflow: hidden;
+    }
+
+    .workout-head {
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+      border-bottom: 1px solid var(--line);
+      background:
+        linear-gradient(90deg, rgba(230, 244, 238, 0.86), rgba(255, 242, 207, 0.6)),
+        var(--surface);
+    }
+
+    .workout-title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .workout-head h2 {
+      margin: 0;
+      font-size: clamp(1.35rem, 2.6vw, 2.05rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .workout-head p {
+      margin: 6px 0 0;
+      max-width: 760px;
+      color: var(--muted);
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 30px;
+      padding: 0 10px;
+      border-radius: 999px;
+      color: var(--teal-dark);
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(15, 118, 110, 0.18);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .progress-wrap {
+      display: grid;
+      gap: 7px;
+      min-width: 190px;
+    }
+
+    .progress-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .progress-track {
+      overflow: hidden;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(96, 113, 109, 0.17);
+    }
+
+    .progress-bar {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--teal), var(--amber));
+      transition: width 0.25s ease;
+    }
+
+    .mode-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .mode-btn {
+      padding: 0 12px;
+    }
+
+    .segment-list {
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+    }
+
+    .segment {
+      display: grid;
+      gap: 10px;
+    }
+
+    .segment-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .segment-header h3 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+      font-size: 0.96rem;
+      letter-spacing: 0;
+    }
+
+    .segment-time {
+      flex: 0 0 auto;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 750;
+    }
+
+    .exercise-grid {
+      display: grid;
+      gap: 8px;
+    }
+
+    .exercise {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      min-height: 72px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .exercise input[type="checkbox"] {
+      appearance: none;
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      margin: 0;
+      border-radius: 6px;
+      border: 2px solid #aab8b3;
+      background: white;
+      cursor: pointer;
+    }
+
+    .exercise input[type="checkbox"]::before {
+      content: "";
+      width: 12px;
+      height: 7px;
+      border-left: 2px solid white;
+      border-bottom: 2px solid white;
+      transform: translateY(-1px) rotate(-45deg) scale(0);
+      transition: transform 0.12s ease;
+    }
+
+    .exercise input[type="checkbox"]:checked {
+      border-color: var(--teal);
+      background: var(--teal);
+    }
+
+    .exercise input[type="checkbox"]:checked::before {
+      transform: translateY(-1px) rotate(-45deg) scale(1);
+    }
+
+    .exercise-main {
+      min-width: 0;
+    }
+
+    .exercise-main strong {
+      display: block;
+      font-size: 0.95rem;
+      line-height: 1.18;
+    }
+
+    .exercise-main span {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.83rem;
+    }
+
+    .dose {
+      justify-self: end;
+      min-width: 112px;
+      max-width: 140px;
+      padding: 7px 9px;
+      border-radius: var(--radius);
+      text-align: center;
+      color: #6f4a04;
+      background: var(--gold-soft);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .optional {
+      display: none;
+    }
+
+    body[data-mode="45"] .optional {
+      display: grid;
+    }
+
+    .log-panel,
+    .notes-panel {
+      padding: 16px;
+    }
+
+    .log-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      color: var(--ink);
+      padding: 9px 10px;
+    }
+
+    .field textarea {
+      grid-column: 1 / -1;
+      min-height: 86px;
+      resize: vertical;
+    }
+
+    .pain-alert {
+      display: none;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: var(--radius);
+      color: #6f241c;
+      background: var(--red-soft);
+      border: 1px solid rgba(217, 79, 61, 0.18);
+      font-size: 0.9rem;
+    }
+
+    .pain-alert.is-visible {
+      display: block;
+    }
+
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .note-block {
+      min-height: 150px;
+      padding: 13px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--paper);
+    }
+
+    .note-block h4 {
+      margin: 0 0 8px;
+      font-size: 0.95rem;
+    }
+
+    .note-block ul {
+      display: grid;
+      gap: 7px;
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 0.87rem;
+    }
+
+    .sources {
+      padding: 20px 0 36px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .sources a {
+      color: var(--teal-dark);
+      font-weight: 700;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid,
+      .app-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .side-panel {
+        position: static;
+      }
+
+      .day-tabs {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .day-tab {
+        grid-template-columns: auto 1fr;
+      }
+
+      .mini-progress {
+        grid-column: 1 / -1;
+        width: 100%;
+      }
+
+      .log-grid,
+      .notes-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .shell {
+        width: min(100% - 20px, 1180px);
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 10px 0;
+      }
+
+      .top-actions {
+        width: 100%;
+        justify-content: stretch;
+      }
+
+      .text-button {
+        flex: 1 1 auto;
+      }
+
+      .overview h2 {
+        font-size: clamp(2rem, 14vw, 3.2rem);
+      }
+
+      .metric-strip,
+      .day-tabs,
+      .log-grid,
+      .notes-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .workout-title-row,
+      .segment-header {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .progress-wrap {
+        width: 100%;
+      }
+
+      .exercise {
+        grid-template-columns: 32px minmax(0, 1fr);
+      }
+
+      .dose {
+        grid-column: 2;
+        justify-self: start;
+        max-width: none;
+      }
+    }
+
+    @media print {
+      .topbar,
+      .top-actions,
+      .side-panel,
+      .mode-row,
+      .log-panel button,
+      .sources {
+        display: none !important;
+      }
+
+      body {
+        background: white;
+      }
+
+      .shell {
+        width: 100%;
+      }
+
+      .hero,
+      main {
+        padding: 0;
+      }
+
+      .hero-grid,
+      .app-grid,
+      .notes-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .court-panel {
+        min-height: 120px;
+      }
+
+      .workout-panel,
+      .log-panel,
+      .notes-panel,
+      .overview,
+      .court-panel {
+        box-shadow: none;
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body data-mode="30">
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand" aria-label="Lyric Hayes Basketball Strength Tracker">
+        <div class="mark" aria-hidden="true">
+          <svg class="icon" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M3.5 9.5c4.6 1.1 8.8 1.1 17 0"></path>
+            <path d="M3.5 14.5c4.6-1.1 8.8-1.1 17 0"></path>
+            <path d="M12 3c-2 2.5-2.9 5.4-2.9 9s.9 6.5 2.9 9"></path>
+            <path d="M12 3c2 2.5 2.9 5.4 2.9 9s-.9 6.5-2.9 9"></path>
+          </svg>
+        </div>
+        <div>
+          <h1>Lyric Hayes</h1>
+          <span>Basketball strength tracker</span>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="text-button" type="button" id="printBtn" title="Print plan">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V3h12v6"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><path d="M6 14h12v7H6z"></path></svg>
+          Print
+        </button>
+        <button class="text-button primary-button" type="button" id="exportBtn" title="Export progress as CSV">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="M7 10l5 5 5-5"></path><path d="M12 15V3"></path></svg>
+          Export
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="shell hero-grid">
+      <div class="overview">
+        <p class="eyebrow">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg>
+          3 days per week
+        </p>
+        <h2>Stronger, quicker, steadier.</h2>
+        <p>Six weeks of basketball-focused strength, core control, and conditioning. Sessions are built for about 30 minutes, with an optional add-on that keeps the total under 45 minutes.</p>
+        <div class="metric-strip" aria-label="Plan metrics">
+          <div class="metric"><strong>30 min</strong><span>standard session</span></div>
+          <div class="metric"><strong>45 min</strong><span>maximum with add-on</span></div>
+          <div class="metric"><strong>1 day</strong><span>rest between lifts</span></div>
+        </div>
+      </div>
+      <div class="court-panel" aria-label="Basketball court training visual">
+        <svg viewBox="0 0 560 360" role="img" aria-labelledby="courtTitle">
+          <title id="courtTitle">Basketball half court lines</title>
+          <defs>
+            <pattern id="wood" width="44" height="44" patternUnits="userSpaceOnUse">
+              <path d="M0 0h44v44H0z" fill="rgba(255,255,255,0.03)"></path>
+              <path d="M0 10h44M0 31h44" stroke="rgba(255,255,255,0.045)" stroke-width="1"></path>
+            </pattern>
+          </defs>
+          <rect width="560" height="360" fill="url(#wood)"></rect>
+          <path d="M60 0v360M500 0v360M60 310h440M60 92h440" stroke="rgba(255,255,255,.52)" stroke-width="4"></path>
+          <path d="M208 310v-84h144v84M242 310v-84M318 310v-84" stroke="rgba(255,255,255,.52)" stroke-width="4" fill="none"></path>
+          <circle cx="280" cy="226" r="48" stroke="rgba(255,255,255,.52)" stroke-width="4" fill="none"></circle>
+          <path d="M146 92c18 68 74 116 134 116s116-48 134-116" stroke="rgba(255,255,255,.52)" stroke-width="4" fill="none"></path>
+          <path d="M266 82h28v10h-28z" fill="rgba(255,255,255,.72)"></path>
+          <circle cx="280" cy="110" r="18" stroke="rgba(255,255,255,.72)" stroke-width="4" fill="none"></circle>
+        </svg>
+        <div class="court-caption">
+          <strong>Training rhythm</strong>
+          <span>Strength, control, cardio, recovery. No max lifts, no loaded twisting, no pushing through back pain.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="safety-band">
+    <div class="shell safety-inner">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"></path></svg>
+      <p><strong>Back-care rule:</strong> this plan should be cleared by Lyric's pediatrician, orthopedist, or physical therapist. Stop the session for sharp pain, nerve symptoms, dizziness, or back pain above 2 out of 10. If she has brace instructions, those instructions win.</p>
+    </div>
+  </section>
+
+  <main>
+    <div class="shell app-grid">
+      <aside class="side-panel" aria-label="Plan controls">
+        <div class="section-title">
+          <h3>Week</h3>
+          <span class="small-muted">1-6</span>
+        </div>
+        <div class="week-grid" id="weekGrid"></div>
+
+        <div class="section-title">
+          <h3>Workout</h3>
+          <span class="small-muted">A/B/C</span>
+        </div>
+        <div class="day-tabs" id="dayTabs" role="tablist" aria-label="Workout days"></div>
+
+        <div class="section-title">
+          <h3>Rules</h3>
+        </div>
+        <ul class="rule-list">
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
+            <span>Keep ribs stacked over hips and move slowly enough to own each rep.</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
+            <span>Use light dumbbells or bands. Add load only when form and pain stay calm.</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
+            <span>Skip max lifts, heavy barbell squats, heavy deadlifts, sit-ups, and loaded twisting.</span>
+          </li>
+        </ul>
+      </aside>
+
+      <div class="content-stack">
+        <section class="workout-panel" aria-live="polite">
+          <div class="workout-head">
+            <div class="workout-title-row">
+              <div>
+                <h2 id="workoutTitle"></h2>
+                <p id="workoutSummary"></p>
+              </div>
+              <div class="progress-wrap">
+                <div class="progress-meta">
+                  <span>Session progress</span>
+                  <span id="progressText">0%</span>
+                </div>
+                <div class="progress-track" aria-hidden="true">
+                  <div class="progress-bar" id="progressBar"></div>
+                </div>
+              </div>
+            </div>
+            <div class="badge-row" id="badgeRow"></div>
+            <div class="mode-row" aria-label="Session length">
+              <button class="mode-btn" type="button" data-mode="30" aria-pressed="true">30 min</button>
+              <button class="mode-btn" type="button" data-mode="45" aria-pressed="false">Optional 45 min</button>
+              <span class="small-muted">Use the longer option only if back pain is 0-1 and form is solid.</span>
+            </div>
+          </div>
+          <div class="segment-list" id="segmentList"></div>
+        </section>
+
+        <section class="log-panel">
+          <div class="section-title">
+            <h3>Session Log</h3>
+            <button class="text-button" type="button" id="resetSessionBtn" title="Clear this session">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 3v6h6"></path></svg>
+              Clear
+            </button>
+          </div>
+          <div class="log-grid">
+            <div class="field">
+              <label for="dateInput">Date</label>
+              <input id="dateInput" type="date">
+            </div>
+            <div class="field">
+              <label for="minutesInput">Minutes</label>
+              <input id="minutesInput" type="number" min="0" max="45" step="1" placeholder="30">
+            </div>
+            <div class="field">
+              <label for="rpeInput">Effort</label>
+              <select id="rpeInput">
+                <option value="">Select</option>
+                <option value="4">4 - easy</option>
+                <option value="5">5 - steady</option>
+                <option value="6">6 - working</option>
+                <option value="7">7 - hard but clean</option>
+                <option value="8">8 - too hard for today</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="painInput">Back Pain</label>
+              <select id="painInput">
+                <option value="">Select</option>
+                <option value="0">0 - none</option>
+                <option value="1">1 - mild</option>
+                <option value="2">2 - watch it</option>
+                <option value="3">3 - stop and tell adult</option>
+                <option value="4">4+ - stop and call clinician</option>
+              </select>
+            </div>
+            <div class="field" style="grid-column: 1 / -1;">
+              <label for="notesInput">Notes</label>
+              <textarea id="notesInput" placeholder="What felt strong? Any discomfort? What weight or band did she use?"></textarea>
+            </div>
+          </div>
+          <div class="pain-alert" id="painAlert">Back pain is above the plan limit. Stop the session, switch to gentle walking/breathing, and check in with a parent and clinician before the next workout.</div>
+        </section>
+
+        <section class="notes-panel">
+          <div class="section-title">
+            <h3>Coach Notes</h3>
+            <span class="small-muted">simple and repeatable</span>
+          </div>
+          <div class="notes-grid">
+            <div class="note-block">
+              <h4>Weekly Schedule</h4>
+              <ul>
+                <li>Best rhythm: Monday, Wednesday, Friday.</li>
+                <li>Second option: Tuesday, Thursday, Saturday.</li>
+                <li>Keep one rest day between strength sessions.</li>
+              </ul>
+            </div>
+            <div class="note-block">
+              <h4>Progression</h4>
+              <ul>
+                <li>Weeks 1-2: learn form, easy resistance.</li>
+                <li>Weeks 3-4: add one rep per set or slightly stronger band.</li>
+                <li>Weeks 5-6: add one set to one strength pair or add 2 cardio intervals.</li>
+              </ul>
+            </div>
+            <div class="note-block">
+              <h4>Equipment</h4>
+              <ul>
+                <li>Mini-band or long resistance band.</li>
+                <li>Light dumbbells, equal weight in both hands.</li>
+                <li>Stable chair, low step, basketball, and water.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="sources">
+    <div class="shell">
+      Safety references used: <a href="https://orthoinfo.aaos.org/en/diseases--conditions/idiopathic-scoliosis-in-children-and-adolescents/">AAOS idiopathic scoliosis guidance</a>, <a href="https://www.mayoclinic.org/healthy-lifestyle/tween-and-teen-health/in-depth/strength-training/art-20047758">Mayo Clinic youth strength training guidance</a>, and <a href="https://health.gov/our-work/nutrition-physical-activity/physical-activity-guidelines/current-guidelines">U.S. Physical Activity Guidelines</a>.
+    </div>
+  </footer>
+
+  <script>
+    const storageKey = "lyric-basketball-strength-tracker-v1";
+    const weeks = [1, 2, 3, 4, 5, 6];
+    const plan = {
+      A: {
+        short: "Lower body strength + core + intervals",
+        title: "Workout A: Strong Base",
+        summary: "Build leg strength for driving, boxing out, and defensive stance while keeping the spine neutral.",
+        badges: ["Lower body", "Anti-extension core", "Bike or walk intervals"],
+        segments: [
+          {
+            name: "Warm-up",
+            time: "5 min",
+            icon: "pulse",
+            items: [
+              ["March or brisk walk", "Nose breathing, tall posture.", "2 min"],
+              ["Hip circles + ankle rocks", "Small range, smooth hips.", "60 sec"],
+              ["Side steps with mini-band", "Knees track over toes.", "2 x 10"]
+            ]
+          },
+          {
+            name: "Strength Circuit",
+            time: "14-16 min",
+            icon: "dumbbell",
+            items: [
+              ["Box squat to chair", "Sit back lightly, stand tall, no heavy barbell.", "2 x 8"],
+              ["Glute bridge", "Ribs down, squeeze glutes, pause at top.", "2 x 10"],
+              ["Low step-up", "Push through whole foot, control the way down.", "2 x 8/side"],
+              ["Band row", "Shoulders down, pull elbows to ribs.", "2 x 10"]
+            ]
+          },
+          {
+            name: "Core Control",
+            time: "4-5 min",
+            icon: "shield",
+            items: [
+              ["Dead bug heel tap", "Low back quiet, slow exhale.", "2 x 6/side"],
+              ["Side plank from knees", "Straight line shoulder to hip to knee.", "2 x 20 sec/side"]
+            ]
+          },
+          {
+            name: "Cardio",
+            time: "6 min",
+            icon: "timer",
+            items: [
+              ["Intervals", "30 sec moderate, 30 sec easy on bike, walk, or gentle court shuttles.", "6 rounds"]
+            ]
+          },
+          {
+            name: "Cool-down",
+            time: "3 min",
+            icon: "leaf",
+            items: [
+              ["Breathing reset", "One hand on ribs, one on belly, slow exhales.", "60 sec"],
+              ["Hip flexor + calf stretch", "Easy stretch, no forcing.", "60 sec/side"]
+            ]
+          },
+          {
+            name: "Optional Add-on",
+            time: "8-10 min",
+            icon: "plus",
+            optional: true,
+            items: [
+              ["Form shooting or free throws", "Calm reps, stop before fatigue changes posture.", "8-10 min"],
+              ["Extra easy cardio", "Bike or brisk walk only if back pain is 0-1.", "6-8 min"]
+            ]
+          }
+        ]
+      },
+      B: {
+        short: "Upper body + balance + court footwork",
+        title: "Workout B: Balanced Control",
+        summary: "Train posture, shoulder strength, single-leg balance, and controlled defensive movement.",
+        badges: ["Upper body", "Anti-rotation core", "Footwork"],
+        segments: [
+          {
+            name: "Warm-up",
+            time: "5 min",
+            icon: "pulse",
+            items: [
+              ["Brisk walk or bike", "Easy pace, tall posture.", "2 min"],
+              ["Arm circles + wall slides", "Move shoulders without arching low back.", "90 sec"],
+              ["Bodyweight reverse lunge reach", "Small step, front knee steady.", "2 x 5/side"]
+            ]
+          },
+          {
+            name: "Strength Circuit",
+            time: "15-17 min",
+            icon: "dumbbell",
+            items: [
+              ["Split squat to comfortable depth", "Hold chair if needed, ribs over hips.", "2 x 6/side"],
+              ["Incline push-up", "Hands on bench or counter, body straight.", "2 x 8"],
+              ["Single-leg hip hinge reach", "Reach hips back, back stays long.", "2 x 6/side"],
+              ["Band pull-apart", "Soft elbows, shoulder blades glide back.", "2 x 12"]
+            ]
+          },
+          {
+            name: "Core Control",
+            time: "4-5 min",
+            icon: "shield",
+            items: [
+              ["Bird dog", "Pause 2 seconds, hips level.", "2 x 6/side"],
+              ["Pallof press", "Band at chest height, resist rotation.", "2 x 8/side"]
+            ]
+          },
+          {
+            name: "Cardio",
+            time: "6-7 min",
+            icon: "timer",
+            items: [
+              ["Footwork intervals", "20 sec defensive slides or shadow dribble, 40 sec easy walk.", "7 rounds"]
+            ]
+          },
+          {
+            name: "Cool-down",
+            time: "3 min",
+            icon: "leaf",
+            items: [
+              ["Doorway chest stretch", "Gentle, no rib flare.", "45 sec/side"],
+              ["Hamstring stretch", "Hinge at hips with long spine.", "45 sec/side"]
+            ]
+          },
+          {
+            name: "Optional Add-on",
+            time: "8-10 min",
+            icon: "plus",
+            optional: true,
+            items: [
+              ["Ball handling", "Stationary pounds, crossovers, and around-leg patterns without twisting hard.", "8 min"],
+              ["One extra easy set", "Repeat push-up and band pull-apart if form is crisp.", "1 set each"]
+            ]
+          }
+        ]
+      },
+      C: {
+        short: "Power control + full body conditioning",
+        title: "Workout C: Game Ready",
+        summary: "Practice landing mechanics, hip strength, pushing strength, and short conditioning bursts.",
+        badges: ["Landing mechanics", "Full body", "Short intervals"],
+        segments: [
+          {
+            name: "Warm-up",
+            time: "5 min",
+            icon: "pulse",
+            items: [
+              ["Easy bike, walk, or jog", "Stay relaxed and upright.", "2 min"],
+              ["Glute bridge march", "Quiet hips, small march.", "2 x 6/side"],
+              ["Athletic stance holds", "Hips back, chest proud, feet active.", "3 x 15 sec"]
+            ]
+          },
+          {
+            name: "Strength Circuit",
+            time: "15-17 min",
+            icon: "dumbbell",
+            items: [
+              ["Lateral step-down", "Tap heel softly, knee lines up over toes.", "2 x 6/side"],
+              ["Dumbbell floor press", "Equal light weights, slow lower.", "2 x 8"],
+              ["Bridge march or hip thrust", "Use bench only if comfortable.", "2 x 8/side"],
+              ["Two-hand farmer carry", "Equal light weights, walk tall.", "4 x 20 sec"]
+            ]
+          },
+          {
+            name: "Core + Landing",
+            time: "5 min",
+            icon: "shield",
+            items: [
+              ["Bench plank", "Elbows on bench, breathe, no sagging.", "2 x 25 sec"],
+              ["Snap-down to athletic stance", "Rise onto toes, land quiet, hold posture.", "2 x 5"]
+            ]
+          },
+          {
+            name: "Cardio",
+            time: "6-7 min",
+            icon: "timer",
+            items: [
+              ["Conditioning intervals", "20 sec court shuttle or bike, 40 sec easy recovery.", "7 rounds"]
+            ]
+          },
+          {
+            name: "Cool-down",
+            time: "3 min",
+            icon: "leaf",
+            items: [
+              ["Walk and breathe", "Let heart rate come down.", "90 sec"],
+              ["Quad + calf stretch", "Gentle, balanced on both sides.", "45 sec/side"]
+            ]
+          },
+          {
+            name: "Optional Add-on",
+            time: "8-10 min",
+            icon: "plus",
+            optional: true,
+            items: [
+              ["Free throws under light fatigue", "Shoot 2, breathe, repeat.", "20 shots"],
+              ["Extra cardio", "Bike or brisk walk at easy pace.", "8 min"]
+            ]
+          }
+        ]
+      }
+    };
+
+    const iconPaths = {
+      pulse: '<path d="M3 13h4l2-7 4 14 2-7h6"></path>',
+      dumbbell: '<path d="M6 6v12"></path><path d="M18 6v12"></path><path d="M6 12h12"></path><path d="M3 9v6"></path><path d="M21 9v6"></path>',
+      shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>',
+      timer: '<path d="M10 2h4"></path><path d="M12 14l3-3"></path><circle cx="12" cy="14" r="8"></circle>',
+      leaf: '<path d="M11 20A7 7 0 0 1 4 13c0-5 4-8 13-9 1 9-4 16-10 16"></path><path d="M4 20c4-4 8-6 13-8"></path>',
+      plus: '<path d="M12 5v14"></path><path d="M5 12h14"></path>'
+    };
+
+    const state = loadState();
+    let currentWeek = state.currentWeek || 1;
+    let currentDay = state.currentDay || "A";
+
+    const weekGrid = document.getElementById("weekGrid");
+    const dayTabs = document.getElementById("dayTabs");
+    const workoutTitle = document.getElementById("workoutTitle");
+    const workoutSummary = document.getElementById("workoutSummary");
+    const badgeRow = document.getElementById("badgeRow");
+    const segmentList = document.getElementById("segmentList");
+    const progressText = document.getElementById("progressText");
+    const progressBar = document.getElementById("progressBar");
+    const dateInput = document.getElementById("dateInput");
+    const minutesInput = document.getElementById("minutesInput");
+    const rpeInput = document.getElementById("rpeInput");
+    const painInput = document.getElementById("painInput");
+    const notesInput = document.getElementById("notesInput");
+    const painAlert = document.getElementById("painAlert");
+
+    function loadState() {
+      try {
+        return JSON.parse(localStorage.getItem(storageKey)) || { sessions: {} };
+      } catch {
+        return { sessions: {} };
+      }
+    }
+
+    function saveState() {
+      state.currentWeek = currentWeek;
+      state.currentDay = currentDay;
+      localStorage.setItem(storageKey, JSON.stringify(state));
+    }
+
+    function sessionKey(day = currentDay, week = currentWeek) {
+      return `week-${week}-${day}`;
+    }
+
+    function getSession(day = currentDay, week = currentWeek) {
+      const key = sessionKey(day, week);
+      if (!state.sessions[key]) {
+        state.sessions[key] = { checks: {}, date: "", minutes: "", rpe: "", pain: "", notes: "" };
+      }
+      return state.sessions[key];
+    }
+
+    function exerciseId(segmentIndex, itemIndex) {
+      return `${currentDay}-${segmentIndex}-${itemIndex}`;
+    }
+
+    function activeIncludesOptional() {
+      return document.body.dataset.mode === "45";
+    }
+
+    function allItemsFor(day, includeOptional = activeIncludesOptional()) {
+      return plan[day].segments.flatMap((segment, segmentIndex) =>
+        includeOptional || !segment.optional
+          ? segment.items.map((_, itemIndex) => `${day}-${segmentIndex}-${itemIndex}`)
+          : []
+      );
+    }
+
+    function checkedCount(day, week, includeOptional = activeIncludesOptional()) {
+      const session = getSession(day, week);
+      return allItemsFor(day, includeOptional).filter(id => session.checks[id]).length;
+    }
+
+    function renderWeekButtons() {
+      weekGrid.innerHTML = weeks.map(week => `
+        <button class="week-btn" type="button" data-week="${week}" aria-pressed="${week === currentWeek}">
+          ${week}
+        </button>
+      `).join("");
+    }
+
+    function renderDayTabs() {
+      dayTabs.innerHTML = Object.entries(plan).map(([day, workout]) => {
+        const total = allItemsFor(day).length;
+        const done = checkedCount(day, currentWeek);
+        return `
+          <button class="day-tab" type="button" role="tab" data-day="${day}" aria-selected="${day === currentDay}">
+            <span class="dot" aria-hidden="true"></span>
+            <span><strong>${day}</strong><small>${workout.short}</small></span>
+            <span class="mini-progress">${done}/${total}</span>
+          </button>
+        `;
+      }).join("");
+    }
+
+    function renderIcon(name) {
+      return `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">${iconPaths[name] || iconPaths.pulse}</svg>`;
+    }
+
+    function renderWorkout() {
+      const workout = plan[currentDay];
+      const session = getSession();
+      workoutTitle.textContent = workout.title;
+      workoutSummary.textContent = workout.summary;
+      badgeRow.innerHTML = workout.badges.map(badge => `<span class="badge">${badge}</span>`).join("");
+      segmentList.innerHTML = workout.segments.map((segment, segmentIndex) => `
+        <section class="segment ${segment.optional ? "optional" : ""}">
+          <div class="segment-header">
+            <h3>${renderIcon(segment.icon)} ${segment.name}</h3>
+            <span class="segment-time">${segment.time}</span>
+          </div>
+          <div class="exercise-grid">
+            ${segment.items.map((item, itemIndex) => {
+              const id = exerciseId(segmentIndex, itemIndex);
+              return `
+                <label class="exercise">
+                  <input type="checkbox" data-check="${id}" ${session.checks[id] ? "checked" : ""}>
+                  <span class="exercise-main">
+                    <strong>${item[0]}</strong>
+                    <span>${item[1]}</span>
+                  </span>
+                  <span class="dose">${item[2]}</span>
+                </label>
+              `;
+            }).join("")}
+          </div>
+        </section>
+      `).join("");
+
+      dateInput.value = session.date || "";
+      minutesInput.value = session.minutes || "";
+      rpeInput.value = session.rpe || "";
+      painInput.value = session.pain || "";
+      notesInput.value = session.notes || "";
+      renderProgress();
+      renderDayTabs();
+      updatePainAlert();
+    }
+
+    function renderProgress() {
+      const total = allItemsFor(currentDay).length;
+      const done = checkedCount(currentDay, currentWeek);
+      const pct = total ? Math.round((done / total) * 100) : 0;
+      progressText.textContent = `${pct}%`;
+      progressBar.style.width = `${pct}%`;
+    }
+
+    function updatePainAlert() {
+      const pain = Number(painInput.value);
+      painAlert.classList.toggle("is-visible", Number.isFinite(pain) && pain > 2);
+    }
+
+    function updateSessionField(field, value) {
+      getSession()[field] = value;
+      saveState();
+    }
+
+    function exportCsv() {
+      const rows = [["Week", "Workout", "Date", "Minutes", "Effort", "Back Pain", "Completed", "Total", "Notes"]];
+      weeks.forEach(week => {
+        Object.keys(plan).forEach(day => {
+          const session = getSession(day, week);
+          const total = allItemsFor(day).length;
+          const done = checkedCount(day, week);
+          rows.push([
+            week,
+            `${day} - ${plan[day].short}`,
+            session.date || "",
+            session.minutes || "",
+            session.rpe || "",
+            session.pain || "",
+            done,
+            total,
+            session.notes || ""
+          ]);
+        });
+      });
+      const csv = rows.map(row => row.map(cell => `"${String(cell).replaceAll('"', '""')}"`).join(",")).join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "lyric-basketball-strength-progress.csv";
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+
+    weekGrid.addEventListener("click", event => {
+      const button = event.target.closest("[data-week]");
+      if (!button) return;
+      currentWeek = Number(button.dataset.week);
+      saveState();
+      renderWeekButtons();
+      renderWorkout();
+    });
+
+    dayTabs.addEventListener("click", event => {
+      const button = event.target.closest("[data-day]");
+      if (!button) return;
+      currentDay = button.dataset.day;
+      saveState();
+      renderWorkout();
+    });
+
+    segmentList.addEventListener("change", event => {
+      if (!event.target.matches("[data-check]")) return;
+      getSession().checks[event.target.dataset.check] = event.target.checked;
+      saveState();
+      renderProgress();
+      renderDayTabs();
+    });
+
+    document.querySelectorAll(".mode-btn").forEach(button => {
+      button.addEventListener("click", () => {
+        document.body.dataset.mode = button.dataset.mode;
+        document.querySelectorAll(".mode-btn").forEach(nextButton => {
+          nextButton.setAttribute("aria-pressed", String(nextButton === button));
+        });
+        renderProgress();
+        renderDayTabs();
+      });
+    });
+
+    dateInput.addEventListener("input", event => updateSessionField("date", event.target.value));
+    minutesInput.addEventListener("input", event => updateSessionField("minutes", event.target.value));
+    rpeInput.addEventListener("change", event => updateSessionField("rpe", event.target.value));
+    painInput.addEventListener("change", event => {
+      updateSessionField("pain", event.target.value);
+      updatePainAlert();
+    });
+    notesInput.addEventListener("input", event => updateSessionField("notes", event.target.value));
+
+    document.getElementById("resetSessionBtn").addEventListener("click", () => {
+      state.sessions[sessionKey()] = { checks: {}, date: "", minutes: "", rpe: "", pain: "", notes: "" };
+      saveState();
+      renderWorkout();
+    });
+
+    document.getElementById("printBtn").addEventListener("click", () => window.print());
+    document.getElementById("exportBtn").addEventListener("click", exportCsv);
+
+    renderWeekButtons();
+    renderWorkout();
+  </script>
+</body>
+</html>
