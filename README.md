@@ -15,6 +15,9 @@ Description: A back-aware basketball strength and conditioning tracker for Lyric
 - 30-minute default sessions
 - Optional add-ons that keep sessions under 45 minutes
 - Leg strength, arm strength, core control, basketball-friendly cardio, and cool-down work
+- StrengthFit-style calendar with planned Workout A/B/C days
+- Progress tab with weekly stats, next workout, logged minutes, and next-step guidance
+- Exercise Description tab with muscles worked, basketball carryover, and back-care cues
 - Back pain and effort logging
 - CSV export from the browser
 - Print-friendly layout
