@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A back-aware basketball strength and conditioning tracker for Lyric Hayes, with 30-minute workouts, optional under-45-minute add-ons, cardio, safety notes, and progress logging.">
+  <meta name="description" content="A back-aware basketball strength and conditioning tracker for Lyric Hayes, with a bigger leg and arm focus, 30-minute workouts, optional under-45-minute add-ons, cardio, safety notes, and progress logging.">
   <title>Lyric Hayes Basketball Strength Tracker</title>
   <style>
     :root {
@@ -941,7 +941,7 @@
           3 days per week
         </p>
         <h2>Stronger, quicker, steadier.</h2>
-        <p>Six weeks of basketball-focused strength, core control, and conditioning. Sessions are built for about 30 minutes, with an optional add-on that keeps the total under 45 minutes.</p>
+        <p>Six weeks of basketball-focused leg drive, arm strength, core control, and conditioning. Sessions are built for about 30 minutes, with an optional add-on that keeps the total under 45 minutes.</p>
         <div class="metric-strip" aria-label="Plan metrics">
           <div class="metric"><strong>30 min</strong><span>standard session</span></div>
           <div class="metric"><strong>45 min</strong><span>maximum with add-on</span></div>
@@ -967,7 +967,7 @@
         </svg>
         <div class="court-caption">
           <strong>Training rhythm</strong>
-          <span>Strength, control, cardio, recovery. No max lifts, no loaded twisting, no pushing through back pain.</span>
+          <span>Legs, arms, control, cardio, recovery. No max lifts, no loaded twisting, no pushing through back pain.</span>
         </div>
       </div>
     </div>
@@ -1107,15 +1107,15 @@
               <h4>Progression</h4>
               <ul>
                 <li>Weeks 1-2: learn form, easy resistance.</li>
-                <li>Weeks 3-4: add one rep per set or slightly stronger band.</li>
-                <li>Weeks 5-6: add one set to one strength pair or add 2 cardio intervals.</li>
+                <li>Weeks 3-4: add one rep per leg and arm set or slightly stronger band.</li>
+                <li>Weeks 5-6: add one set to one leg/arm pair or add 2 cardio intervals.</li>
               </ul>
             </div>
             <div class="note-block">
               <h4>Equipment</h4>
               <ul>
                 <li>Mini-band or long resistance band.</li>
-                <li>Light dumbbells, equal weight in both hands.</li>
+                <li>Light dumbbells for curls, rows, presses, carries, and leg work.</li>
                 <li>Stable chair, low step, basketball, and water.</li>
               </ul>
             </div>
@@ -1132,14 +1132,14 @@
   </footer>
 
   <script>
-    const storageKey = "lyric-basketball-strength-tracker-v1";
+    const storageKey = "lyric-basketball-strength-tracker-v2";
     const weeks = [1, 2, 3, 4, 5, 6];
     const plan = {
       A: {
-        short: "Lower body strength + core + intervals",
-        title: "Workout A: Strong Base",
-        summary: "Build leg strength for driving, boxing out, and defensive stance while keeping the spine neutral.",
-        badges: ["Lower body", "Anti-extension core", "Bike or walk intervals"],
+        short: "Leg drive + pulling arms + intervals",
+        title: "Workout A: Leg Drive + Pull",
+        summary: "Build stronger legs for driving, boxing out, and defense, plus pulling arm strength for rebounds and contact balance.",
+        badges: ["Leg strength", "Rows + curls", "Bike or walk intervals"],
         segments: [
           {
             name: "Warm-up",
@@ -1153,35 +1153,36 @@
           },
           {
             name: "Strength Circuit",
-            time: "14-16 min",
+            time: "16-18 min",
             icon: "dumbbell",
             items: [
-              ["Box squat to chair", "Sit back lightly, stand tall, no heavy barbell.", "2 x 8"],
-              ["Glute bridge", "Ribs down, squeeze glutes, pause at top.", "2 x 10"],
+              ["Box squat to chair", "Sit back lightly, stand tall, no heavy barbell.", "2 x 10"],
               ["Low step-up", "Push through whole foot, control the way down.", "2 x 8/side"],
-              ["Band row", "Shoulders down, pull elbows to ribs.", "2 x 10"]
+              ["Glute bridge", "Ribs down, squeeze glutes, pause at top.", "2 x 12"],
+              ["Band row", "Shoulders down, pull elbows to ribs.", "2 x 12"],
+              ["Band or dumbbell curl", "Elbows stay near ribs, wrists straight.", "2 x 10"]
             ]
           },
           {
             name: "Core Control",
-            time: "4-5 min",
+            time: "3-4 min",
             icon: "shield",
             items: [
-              ["Dead bug heel tap", "Low back quiet, slow exhale.", "2 x 6/side"],
-              ["Side plank from knees", "Straight line shoulder to hip to knee.", "2 x 20 sec/side"]
+              ["Dead bug heel tap", "Low back quiet, slow exhale.", "2 x 5/side"],
+              ["Side plank from knees", "Straight line shoulder to hip to knee.", "1 x 20 sec/side"]
             ]
           },
           {
             name: "Cardio",
-            time: "6 min",
+            time: "5-6 min",
             icon: "timer",
             items: [
-              ["Intervals", "30 sec moderate, 30 sec easy on bike, walk, or gentle court shuttles.", "6 rounds"]
+              ["Intervals", "30 sec moderate, 30 sec easy on bike, walk, or gentle court shuttles.", "5-6 rounds"]
             ]
           },
           {
             name: "Cool-down",
-            time: "3 min",
+            time: "2-3 min",
             icon: "leaf",
             items: [
               ["Breathing reset", "One hand on ribs, one on belly, slow exhales.", "60 sec"],
@@ -1194,17 +1195,18 @@
             icon: "plus",
             optional: true,
             items: [
-              ["Form shooting or free throws", "Calm reps, stop before fatigue changes posture.", "8-10 min"],
-              ["Extra easy cardio", "Bike or brisk walk only if back pain is 0-1.", "6-8 min"]
+              ["Wall sit", "Back relaxed against wall, knees comfortable, breathe.", "3 x 20 sec"],
+              ["Calf raise", "Rise and lower slowly while holding a wall for balance.", "2 x 12"],
+              ["Band row + curl", "One row, one curl, reset posture before each rep.", "2 x 8 each"]
             ]
           }
         ]
       },
       B: {
-        short: "Upper body + balance + court footwork",
-        title: "Workout B: Balanced Control",
-        summary: "Train posture, shoulder strength, single-leg balance, and controlled defensive movement.",
-        badges: ["Upper body", "Anti-rotation core", "Footwork"],
+        short: "Arms + single-leg balance + footwork",
+        title: "Workout B: Arms + Balance",
+        summary: "Train pushing arms, shoulder control, triceps, and single-leg strength for stable cuts and controlled contact.",
+        badges: ["Push strength", "Single-leg legs", "Footwork"],
         segments: [
           {
             name: "Warm-up",
@@ -1218,30 +1220,31 @@
           },
           {
             name: "Strength Circuit",
-            time: "15-17 min",
+            time: "16-18 min",
             icon: "dumbbell",
             items: [
               ["Split squat to comfortable depth", "Hold chair if needed, ribs over hips.", "2 x 6/side"],
               ["Incline push-up", "Hands on bench or counter, body straight.", "2 x 8"],
               ["Single-leg hip hinge reach", "Reach hips back, back stays long.", "2 x 6/side"],
+              ["Band triceps pressdown", "Elbows pinned near ribs, press down smoothly.", "2 x 10"],
               ["Band pull-apart", "Soft elbows, shoulder blades glide back.", "2 x 12"]
             ]
           },
           {
             name: "Core Control",
-            time: "4-5 min",
+            time: "3-4 min",
             icon: "shield",
             items: [
-              ["Bird dog", "Pause 2 seconds, hips level.", "2 x 6/side"],
-              ["Pallof press", "Band at chest height, resist rotation.", "2 x 8/side"]
+              ["Bird dog", "Pause 2 seconds, hips level.", "1 x 6/side"],
+              ["Pallof press", "Band at chest height, resist rotation.", "2 x 6/side"]
             ]
           },
           {
             name: "Cardio",
-            time: "6-7 min",
+            time: "5-6 min",
             icon: "timer",
             items: [
-              ["Footwork intervals", "20 sec defensive slides or shadow dribble, 40 sec easy walk.", "7 rounds"]
+              ["Footwork intervals", "20 sec defensive slides or shadow dribble, 40 sec easy walk.", "6 rounds"]
             ]
           },
           {
@@ -1259,17 +1262,18 @@
             icon: "plus",
             optional: true,
             items: [
-              ["Ball handling", "Stationary pounds, crossovers, and around-leg patterns without twisting hard.", "8 min"],
-              ["One extra easy set", "Repeat push-up and band pull-apart if form is crisp.", "1 set each"]
+              ["Push-up + triceps pair", "Incline push-up, then band triceps pressdown.", "1-2 sets each"],
+              ["Reverse lunge practice", "Small controlled step, hold a chair if needed.", "2 x 5/side"],
+              ["Ball handling", "Stationary pounds and crossovers without twisting hard.", "4 min"]
             ]
           }
         ]
       },
       C: {
-        short: "Power control + full body conditioning",
-        title: "Workout C: Game Ready",
-        summary: "Practice landing mechanics, hip strength, pushing strength, and short conditioning bursts.",
-        badges: ["Landing mechanics", "Full body", "Short intervals"],
+        short: "Leg power + strong arms + conditioning",
+        title: "Workout C: Leg Power + Strong Arms",
+        summary: "Practice safe landing mechanics, stronger legs, pressing and pulling arms, and short conditioning bursts.",
+        badges: ["Leg power", "Press + pull arms", "Short intervals"],
         segments: [
           {
             name: "Warm-up",
@@ -1283,12 +1287,13 @@
           },
           {
             name: "Strength Circuit",
-            time: "15-17 min",
+            time: "16-18 min",
             icon: "dumbbell",
             items: [
               ["Lateral step-down", "Tap heel softly, knee lines up over toes.", "2 x 6/side"],
               ["Dumbbell floor press", "Equal light weights, slow lower.", "2 x 8"],
-              ["Bridge march or hip thrust", "Use bench only if comfortable.", "2 x 8/side"],
+              ["Reverse lunge to knee drive", "Small step back, stand tall, pause at the top.", "2 x 6/side"],
+              ["Band row", "Pull elbows to ribs, keep shoulders relaxed.", "2 x 10"],
               ["Two-hand farmer carry", "Equal light weights, walk tall.", "4 x 20 sec"]
             ]
           },
@@ -1324,8 +1329,9 @@
             icon: "plus",
             optional: true,
             items: [
-              ["Free throws under light fatigue", "Shoot 2, breathe, repeat.", "20 shots"],
-              ["Extra cardio", "Bike or brisk walk at easy pace.", "8 min"]
+              ["Wall sit + curl pair", "Wall sit, then light dumbbell or band curls.", "2 rounds"],
+              ["Calf raise + band row pair", "Slow calf raises, then smooth band rows.", "2 x 10 each"],
+              ["Free throws under light fatigue", "Shoot 2, breathe, repeat.", "12-16 shots"]
             ]
           }
         ]

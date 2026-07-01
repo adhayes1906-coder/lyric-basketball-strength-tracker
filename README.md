@@ -6,7 +6,7 @@ This is a self-contained workout tracker for a 16-year-old basketball player who
 
 Repository name: `lyric-basketball-strength-tracker`
 
-Description: A back-aware basketball strength and conditioning tracker for Lyric Hayes, with 30-minute workouts, optional under-45-minute add-ons, cardio, safety notes, and progress logging.
+Description: A back-aware basketball strength and conditioning tracker for Lyric Hayes, with a bigger leg and arm focus, 30-minute workouts, optional under-45-minute add-ons, cardio, safety notes, and progress logging.
 
 ## What is included
 
@@ -14,7 +14,7 @@ Description: A back-aware basketball strength and conditioning tracker for Lyric
 - 6-week tracker
 - 30-minute default sessions
 - Optional add-ons that keep sessions under 45 minutes
-- Strength, core control, basketball-friendly cardio, and cool-down work
+- Leg strength, arm strength, core control, basketball-friendly cardio, and cool-down work
 - Back pain and effort logging
 - CSV export from the browser
 - Print-friendly layout
