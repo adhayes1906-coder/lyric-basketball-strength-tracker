@@ -1468,7 +1468,7 @@
           </li>
           <li>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
-            <span>Skip max lifts, heavy barbell squats, heavy deadlifts, sit-ups, and loaded twisting.</span>
+            <span>Skip max lifts, heavy barbell squats, heavy deadlifts, sit-ups, loaded twisting, loaded jumps, box jumps, and depth jumps.</span>
           </li>
         </ul>
       </aside>
@@ -1742,7 +1742,7 @@
             items: [
               ["Wall sit", "Back relaxed against wall, knees comfortable, breathe.", "3 x 20 sec"],
               ["Calf raise", "Rise and lower slowly while holding a wall for balance.", "2 x 12"],
-              ["Squat-to-calf raise", "Stand from a mini squat and reach tall without leaving the ground.", "2 x 8"],
+              ["Plyometric prep: squat-to-calf raise", "Stand from a mini squat and reach tall without leaving the ground.", "2 x 8"],
               ["Band row + curl", "One row, one curl, reset posture before each rep.", "2 x 8 each"]
             ]
           }
@@ -1810,7 +1810,7 @@
             items: [
               ["Push-up + triceps pair", "Incline push-up, then band triceps pressdown.", "1-2 sets each"],
               ["Reverse lunge practice", "Small controlled step, hold a chair if needed.", "2 x 5/side"],
-              ["Low pogo hops", "Tiny quiet hops from the ankles; stop if knees or back complain.", "2 x 10"],
+              ["Low pogo hops (plyometric)", "Tiny quiet hops from the ankles; stop if knees or back complain.", "2 x 10"],
               ["Ball handling", "Stationary pounds and crossovers without twisting hard.", "4 min"]
             ]
           }
@@ -1845,13 +1845,13 @@
             ]
           },
           {
-            name: "Core + Landing",
+            name: "Core + Plyometric Landing",
             time: "5 min",
             icon: "shield",
             items: [
               ["Bench plank", "Elbows on bench, breathe, no sagging.", "2 x 25 sec"],
               ["Snap-down to athletic stance", "Rise onto toes, land quiet, hold posture.", "2 x 5"],
-              ["Submax vertical jump practice", "Jump at 70-80%, land quietly, hold the landing.", "3 x 3"]
+              ["Submax plyometric vertical jump", "Jump at 70-80%, land quietly, hold the landing.", "3 x 3"]
             ]
           },
           {
@@ -1879,7 +1879,7 @@
             items: [
               ["Wall sit + curl pair", "Wall sit, then light dumbbell or band curls.", "2 rounds"],
               ["Calf raise + band row pair", "Slow calf raises, then smooth band rows.", "2 x 10 each"],
-              ["Approach jump footwork", "Walk through one-two plant steps, jump lightly, land balanced.", "2 x 4"],
+              ["Approach jump plyometric footwork", "Walk through one-two plant steps, jump lightly, land balanced.", "2 x 4"],
               ["Free throws under light fatigue", "Shoot 2, breathe, repeat.", "12-16 shots"]
             ]
           }
@@ -2329,7 +2329,7 @@
 
     function describeExercise(name) {
       const lower = name.toLowerCase();
-      if (lower.includes("vertical jump") || lower.includes("pogo") || lower.includes("approach jump") || lower.includes("squat-to-calf")) {
+      if (lower.includes("vertical jump") || lower.includes("plyometric") || lower.includes("pogo") || lower.includes("approach jump") || lower.includes("squat-to-calf")) {
         return { muscles: "Glutes, quads, calves, ankles, core", purpose: "Builds vertical jump power through leg drive, ankle spring, arm swing timing, and quiet landing control.", cue: "Keep jumps submax, land softly, and stop if back, knee, or nerve pain appears." };
       }
       if (lower.includes("squat") || lower.includes("wall sit") || lower.includes("lunge") || lower.includes("step") || lower.includes("stance") || lower.includes("snap")) {
