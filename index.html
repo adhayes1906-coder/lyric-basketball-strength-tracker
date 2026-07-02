@@ -1677,14 +1677,14 @@
   </footer>
 
   <script>
-    const storageKey = "lyric-basketball-strength-tracker-v2";
+    const storageKey = "lyric-basketball-strength-tracker-v3";
     const weeks = [1, 2, 3, 4, 5, 6];
     const plan = {
       A: {
         short: "Leg drive + pulling arms + intervals",
         title: "Workout A: Leg Drive + Pull",
-        summary: "Build stronger legs for driving, boxing out, and defense, plus pulling arm strength for rebounds and contact balance.",
-        badges: ["Leg strength", "Rows + curls", "Bike or walk intervals"],
+        summary: "Build stronger legs for driving, boxing out, defense, and vertical jump power, plus pulling arm strength for rebounds and contact balance.",
+        badges: ["Leg strength", "Jump power", "Rows + curls", "Bike or walk intervals"],
         segments: [
           {
             name: "Warm-up",
@@ -1742,6 +1742,7 @@
             items: [
               ["Wall sit", "Back relaxed against wall, knees comfortable, breathe.", "3 x 20 sec"],
               ["Calf raise", "Rise and lower slowly while holding a wall for balance.", "2 x 12"],
+              ["Squat-to-calf raise", "Stand from a mini squat and reach tall without leaving the ground.", "2 x 8"],
               ["Band row + curl", "One row, one curl, reset posture before each rep.", "2 x 8 each"]
             ]
           }
@@ -1750,8 +1751,8 @@
       B: {
         short: "Arms + single-leg balance + footwork",
         title: "Workout B: Arms + Balance",
-        summary: "Train pushing arms, shoulder control, triceps, and single-leg strength for stable cuts and controlled contact.",
-        badges: ["Push strength", "Single-leg legs", "Footwork"],
+        summary: "Train pushing arms, shoulder control, triceps, single-leg strength, and ankle spring for stable cuts and better lift.",
+        badges: ["Push strength", "Single-leg legs", "Jump mechanics", "Footwork"],
         segments: [
           {
             name: "Warm-up",
@@ -1809,6 +1810,7 @@
             items: [
               ["Push-up + triceps pair", "Incline push-up, then band triceps pressdown.", "1-2 sets each"],
               ["Reverse lunge practice", "Small controlled step, hold a chair if needed.", "2 x 5/side"],
+              ["Low pogo hops", "Tiny quiet hops from the ankles; stop if knees or back complain.", "2 x 10"],
               ["Ball handling", "Stationary pounds and crossovers without twisting hard.", "4 min"]
             ]
           }
@@ -1817,8 +1819,8 @@
       C: {
         short: "Leg power + strong arms + conditioning",
         title: "Workout C: Leg Power + Strong Arms",
-        summary: "Practice safe landing mechanics, stronger legs, pressing and pulling arms, and short conditioning bursts.",
-        badges: ["Leg power", "Press + pull arms", "Short intervals"],
+        summary: "Practice safe landing mechanics, stronger legs, vertical jump technique, pressing and pulling arms, and short conditioning bursts.",
+        badges: ["Leg power", "Vertical jump", "Press + pull arms", "Short intervals"],
         segments: [
           {
             name: "Warm-up",
@@ -1848,7 +1850,8 @@
             icon: "shield",
             items: [
               ["Bench plank", "Elbows on bench, breathe, no sagging.", "2 x 25 sec"],
-              ["Snap-down to athletic stance", "Rise onto toes, land quiet, hold posture.", "2 x 5"]
+              ["Snap-down to athletic stance", "Rise onto toes, land quiet, hold posture.", "2 x 5"],
+              ["Submax vertical jump practice", "Jump at 70-80%, land quietly, hold the landing.", "3 x 3"]
             ]
           },
           {
@@ -1876,6 +1879,7 @@
             items: [
               ["Wall sit + curl pair", "Wall sit, then light dumbbell or band curls.", "2 rounds"],
               ["Calf raise + band row pair", "Slow calf raises, then smooth band rows.", "2 x 10 each"],
+              ["Approach jump footwork", "Walk through one-two plant steps, jump lightly, land balanced.", "2 x 4"],
               ["Free throws under light fatigue", "Shoot 2, breathe, repeat.", "12-16 shots"]
             ]
           }
@@ -2325,6 +2329,9 @@
 
     function describeExercise(name) {
       const lower = name.toLowerCase();
+      if (lower.includes("vertical jump") || lower.includes("pogo") || lower.includes("approach jump") || lower.includes("squat-to-calf")) {
+        return { muscles: "Glutes, quads, calves, ankles, core", purpose: "Builds vertical jump power through leg drive, ankle spring, arm swing timing, and quiet landing control.", cue: "Keep jumps submax, land softly, and stop if back, knee, or nerve pain appears." };
+      }
       if (lower.includes("squat") || lower.includes("wall sit") || lower.includes("lunge") || lower.includes("step") || lower.includes("stance") || lower.includes("snap")) {
         return { muscles: "Quads, glutes, hamstrings, calves", purpose: "Builds leg drive, defensive stance strength, and landing control.", cue: "Keep knees tracking over toes and ribs stacked over hips." };
       }
